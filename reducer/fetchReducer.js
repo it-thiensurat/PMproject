@@ -5,20 +5,14 @@ import {
     CLEAR_USERINFO,
     USER_TOKEN,
     CLEAR_TOKEN,
-    SAVE_PROVINCE,
-    SAVE_COMPANY,
-    SAVE_TITLE,
-    SAVE_POSITION
+    CHECK_TYPE
 } from '../utils/contants'
 
 const initialState = {
     indicator: false,
     userInfo: [],
     token: '',
-    province: [],
-    company: [],
-    title: [],
-    position: []
+    checkType: false,
 }
 
 export default (state = initialState, action) => {
@@ -53,25 +47,10 @@ export default (state = initialState, action) => {
                 ...state,
                 token: ''
             }
-        case SAVE_PROVINCE:
+        case CHECK_TYPE:
             return {
                 ...state,
-                province: action.payload
-            }
-        case SAVE_COMPANY:
-            return {
-                ...state,
-                company: action.payload
-            }
-        case SAVE_TITLE:
-            return {
-                ...state,
-                title: action.payload
-            }
-        case SAVE_POSITION:
-            return {
-                ...state,
-                position: action.payload
+                checkType: action.payload
             }
         default:
             return state

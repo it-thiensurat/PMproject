@@ -5,11 +5,9 @@ import {
     CLEAR_USERINFO,
     USER_TOKEN,
     CLEAR_TOKEN,
-    SAVE_PROVINCE,
-    SAVE_COMPANY,
-    SAVE_TITLE,
-    SAVE_POSITION
+    CHECK_TYPE,
 } from '../utils/contants'
+
 
 /**
  * 
@@ -88,69 +86,15 @@ export const clearToken = (data) => ({
  */
 
 /**
- * Province
+ * Check Type
  */
-export function provinceControll(data) {
+export function CheckTypeControll(data) {
     return (dispatch) => {
-        dispatch(saveProvince(data))
+        dispatch(changeTypeCheck(data))
     }
 }
 
-export const saveProvince = (data) => ({
-    type: SAVE_PROVINCE,
+export const changeTypeCheck = (data) => ({
+    type: CHECK_TYPE,
     payload: data
 })
-/**
- * End
- */
-
- /**
- * Company
- */
-export function companyControll(data) {
-    return (dispatch) => {
-        dispatch(saveCompany(data))
-    }
-}
-
-export const saveCompany = (data) => ({
-    type: SAVE_COMPANY,
-    payload: data
-})
-/**
- * End
- */
-
-/**
- * Title
- */
-export function titleControll(data) {
-    return (dispatch) => {
-        dispatch(saveTitle(data))
-    }
-}
-
-export const saveTitle = (data) => ({
-    type: SAVE_TITLE,
-    payload: data
-})
-/**
- * End
- */
-
-/**
- * Position
- */
-export function positionControll(data) {
-    return (dispatch) => {
-        dispatch(savePosition(data))
-    }
-}
-
-export const savePosition = (data) => ({
-    type: SAVE_POSITION,
-    payload: data
-})
-/**
- * End
- */

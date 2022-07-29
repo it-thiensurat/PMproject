@@ -41,7 +41,7 @@
  setCustomTextInput(customTextProps);
  setCustomText(customTextProps);
  
-//  import Main from './screen/MainScreen'
+ import Main from './screen/MainScreen'
  import Login from './screen/LoginScreen'
 //  import Splash from './screen/SplashScreen'
  
@@ -58,7 +58,7 @@
        initialRouteName='Login'>
        {/* <Stack.Screen name="Splash" component={Splash} /> */}
        <Stack.Screen name="Login" component={Login} />
-       {/* <Stack.Screen name="Main" component={Main} /> */}
+       <Stack.Screen name="Main" component={Main} />
      </Stack.Navigator>
    );
  }

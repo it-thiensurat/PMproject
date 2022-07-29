@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         height: COMPONENT_HIGHT,
-        width: DEVICE_WIDTH - 40,
+        width: DEVICE_WIDTH / 1.2,
         backgroundColor: 'white',
         justifyContent: 'space-between',
         borderRadius: COMPONENT_HIGHT / 2
@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
     },
     mainButton: {
         height: COMPONENT_HIGHT,
-        width: DEVICE_WIDTH - 40,
+        width: DEVICE_WIDTH / 1.2,
         backgroundColor: secondaryColor,
         borderRadius: COMPONENT_HIGHT / 2
     },

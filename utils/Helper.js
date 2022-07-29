@@ -1,9 +1,9 @@
 import axios from 'axios'
 
 const httpServices = {
-    get:function (url, headerParam, callback) {
+    get:function (url, callback) {
         // console.log(Connection.BaseURL+url);
-        axios.get(url, { headers: headerParam }).then(function (response) {
+        axios.get(url).then(function (response) {
             callback(response.data);
         }).catch(function (error) {
             callback(error);
@@ -16,11 +16,9 @@ const httpServices = {
             headers: header
         };
         axios.post(url, data, config).then(function (response) {
-            console.log(JSON.stringify(response))
             callback(response.data);
         }).catch(function (error) {
             callback(error);
-            console.log('catch: ' + JSON.stringify(error))
         });
     },
     delete:function (url, data, callback) {
