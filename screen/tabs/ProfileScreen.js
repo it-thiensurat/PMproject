@@ -14,6 +14,15 @@ import { NavigationBar } from 'navigationbar-react-native'
 import Icon from 'react-native-vector-icons/dist/FontAwesome5'
 
 import {
+    userInfoControll,
+    indicatorControll,
+    saveQRContno,
+    saveQRRefno,
+    saveQRMachine,
+    saveQRFilter
+} from '../../actions'
+
+import {
     TOKEN_KEY,
     darkColor,
     lightColor,
@@ -104,10 +113,14 @@ class ProfileScreen extends React.Component {
                             async () => {
                                 await StorageService.remove(TOKEN_KEY)
                                 await StorageService.clear()
+                                await this.props.saveQRContno('clear', [])
+                                await this.props.saveQRRefno('clear', [])
+                                await this.props.saveQRMachine('clear', [])
+                                await this.props.saveQRFilter('clear', [])
                                 await this.props.navigation.replace('Login')
                             }
                         }>
-                        <Text style={[{ color: 'white', fontSize: 26, alignSelf: 'center' }, styles.bold]}>{`ออกจากระบบ`}</Text>
+                        <Text style={[{ color: 'white', fontSize: 24, alignSelf: 'center' }, styles.bold]}>{`ออกจากระบบ`}</Text>
                     </TouchableOpacity>
                 </ScrollView>
             </View>
@@ -120,7 +133,12 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-
+    userInfoControll,
+    indicatorControll,
+    saveQRContno,
+    saveQRRefno,
+    saveQRMachine,
+    saveQRFilter
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProfileScreen)

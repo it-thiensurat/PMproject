@@ -44,6 +44,7 @@
  import Main from './screen/MainScreen'
  import Login from './screen/LoginScreen'
 //  import Splash from './screen/SplashScreen'
+ import Scanner from './screen/ScannerScreen'
  
  import styles from './style/style'
  
@@ -59,6 +60,7 @@
        {/* <Stack.Screen name="Splash" component={Splash} /> */}
        <Stack.Screen name="Login" component={Login} />
        <Stack.Screen name="Main" component={Main} />
+       <Stack.Screen name="Scanner" component={Scanner} />
      </Stack.Navigator>
    );
  }

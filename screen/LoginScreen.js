@@ -210,7 +210,7 @@ class LoginScreen extends React.Component {
                     onPress={
                         () => this.onLogin()
                     }>
-                    <Text style={{ color: primaryColor, fontSize: 24 }}>{`เข้าสู่ระบบ`}</Text>
+                    <Text style={[ styles.bold, { color: 'white', fontSize: 24, alignSelf: 'center' }]}>{`เข้าสู่ระบบ`}</Text>
                 </TouchableOpacity>
                 <View style={[styles.positionBottom, { alignItems: 'center', justifyContent: 'center' }]}>
                     <Text style={{ fontSize: 16, color: lightColor }}>{`Copyright © 2022 by Thiensurat Public Company Limited.`}</Text>

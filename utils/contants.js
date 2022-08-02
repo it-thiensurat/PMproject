@@ -37,6 +37,14 @@ export const CLEAR_USERINFO     = 'CLEAR_USERINFO'
 export const USER_TOKEN         = 'USER_TOKEN'
 export const CLEAR_TOKEN        = 'CLEAR_TOKEN'
 export const CHECK_TYPE         = 'CHECK_TYPE'
+export const SAVE_QR_CONTNO     = 'SAVE_QR_CONTNO'
+export const SAVE_QR_REFNO      = 'SAVE_QR_REFNO'
+export const SAVE_QR_MACHINE    = 'SAVE_QR_MACHINE'
+export const SAVE_QR_FILTER     = 'SAVE_QR_FILTER'
+export const CLEAR_QR_CONTNO    = 'CLEAR_QR_CONTNO'
+export const CLEAR_QR_REFNO     = 'CLEAR_QR_REFNO'
+export const CLEAR_QR_MACHINE   = 'CLEAR_QR_MACHINE'
+export const CLEAR_QR_FILTER    = 'CLEAR_QR_FILTER'
 /**
  * End
  */

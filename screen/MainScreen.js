@@ -28,7 +28,7 @@ export default function MainTab() {
             //     inactiveTintColor: 'gray',
             // }}
             screenOptions = {({ route }) =>({
-                tabBarActiveTintColor: secondaryColor,
+                tabBarActiveTintColor: '#17A589',
                 tabBarInactiveTintColor: 'gray',
                 tabBarStyle: [
                   {

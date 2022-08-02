@@ -9,6 +9,12 @@ production = ENV["PRODUCTION"] == "1"
 target 'PMproject' do
   config = use_native_modules!
 
+  # Permissions
+  permissions_path = '../node_modules/react-native-permissions/ios'
+
+  # Pods for PMproject
+  pod 'Permission-Camera', :path => "#{permissions_path}/Camera"
+
   # Flags change depending on the env values.
   flags = get_default_flags()
 

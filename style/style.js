@@ -41,6 +41,15 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         borderRadius: COMPONENT_HIGHT / 2
     },
+    inputBarcode: {
+        paddingLeft: 15,
+        alignItems: 'center',
+        height: COMPONENT_HIGHT,
+        width: DEVICE_WIDTH / 1.3,
+        backgroundColor: 'white',
+        justifyContent: 'space-between',
+        borderRadius: COMPONENT_HIGHT / 2
+    },
     inputContainer: {
         width: DEVICE_WIDTH - 80,
         height: COMPONENT_HIGHT - 5,
@@ -51,6 +60,12 @@ const styles = StyleSheet.create({
         width: DEVICE_WIDTH / 1.2,
         backgroundColor: secondaryColor,
         borderRadius: COMPONENT_HIGHT / 2
+    },
+    useButton: {
+        height: COMPONENT_HIGHT,
+        width: DEVICE_WIDTH / 1.4,
+        backgroundColor: secondaryColor,
+        borderRadius: 26
     },
     secondaryButton: {
         height: COMPONENT_HIGHT,
