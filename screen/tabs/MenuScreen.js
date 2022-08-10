@@ -26,7 +26,10 @@ import {
 
 import {
     primaryColor,
-    secondaryColor
+    secondaryColor,
+    API_KEY,
+    BASEURL,
+    INSERT_PM
 } from '../../utils/contants'
 
 import styles from '../../style/style'
@@ -36,6 +39,72 @@ const DEVICE_WIDTH = Dimensions.get('window').width;
 const DEVICE_HEIGHT = Dimensions.get('window').height;
 
 class MenuScreen extends React.Component {
+
+    OnSave() {
+
+        let that = this
+        const props = that.props
+        const users = props.reducer.userInfo
+        let header = {
+            'Authorization': props.reducer.token,
+            'x-api-key': API_KEY
+        }
+
+        if (users.empId != '' && props.reducer.qrcontno != '' && props.reducer.qrrefno != '' && props.reducer.qrmachine != '' && props.reducer.qrfilter != '') {
+            let formData = new FormData();
+
+            formData.append('CONTNO', props.reducer.qrcontno);
+            formData.append('Refno', props.reducer.qrrefno);
+            formData.append('ProductSerial', props.reducer.qrmachine);
+            formData.append('FilterSerial', props.reducer.qrfilter);
+            formData.append('Empid', users.empId);
+
+            props.indicatorControll(true)
+            Helper.post(BASEURL + INSERT_PM, formData, header, async (results) => {
+                // alert(JSON.stringify(results))
+                // return
+                if (results.status == 'SUCCESS') {
+                    props.indicatorControll(false)
+                    Alert.alert(
+                        'ข้อความ',
+                        `${results.message}`,
+                        [
+                            {
+                                text: 'OK', onPress: () => that.ClearReducer()
+                            },
+                        ],
+                        { cancelable: false }
+                    )
+                } else {
+                    props.indicatorControll(false)
+                    Alert.alert(
+                        'คำเตือน',
+                        `${results.message}`,
+                        [
+                            { text: 'OK', onPress: () => null },
+                        ],
+                        { cancelable: false }
+                    )
+                }
+            })
+        } else {
+            Alert.alert(
+                'ข้อความ',
+                `กรุณากรอกข้อมูลหรือสแกนบาร์โค๊ดให้ครบถ้วนก่อนทำการบันทึก`,
+                [
+                    { text: "ตกลง", onPress: () => null }
+                ],
+                { cancelable: false }
+            )
+        }
+    }
+
+    ClearReducer() {
+        this.props.saveQRContno('clear', [])
+        this.props.saveQRRefno('clear', [])
+        this.props.saveQRMachine('clear', [])
+        this.props.saveQRFilter('clear', [])
+    }
 
     ComponentLeft = () => {
         return (
@@ -64,12 +133,7 @@ class MenuScreen extends React.Component {
                                 `คุณต้องการล้างข้อมูลทั้งหมดใช่หรือไม่`,
                                 [
                                     {
-                                        text: "ใช่", onPress: () => {
-                                            this.props.saveQRContno('clear', [])
-                                            this.props.saveQRRefno('clear', [])
-                                            this.props.saveQRMachine('clear', [])
-                                            this.props.saveQRFilter('clear', [])
-                                        }
+                                        text: "ใช่", onPress: () => this.ClearReducer()
                                     },
                                     { text: "ยกเลิก", onPress: () => null, style: "cancel" }
                                 ],
@@ -137,7 +201,7 @@ class MenuScreen extends React.Component {
                         <View style={[styles.marginBetweenVertical]}></View>
                         <View style={[styles.container, styles.containerRow]}>
                             <View style={[styles.center]}>
-                                <Text style={[styles.bold, { fontSize: 22, color: 'white', alignSelf: 'center', paddingLeft: 50 }]}>{`เลขสัญญา`}</Text>
+                                <Text style={[styles.bold, { fontSize: 22, color: 'white', alignSelf: 'center', paddingLeft: 55 }]}>{`เลขสัญญา`}</Text>
                                 <View style={[styles.container, { flexDirection: 'row', alignItems: 'center' }]}>
                                     <View style={[styles.marginBetweenVertical]}></View>
                                     <View style={[styles.center, styles.shadow, { width: 55, height: 55, backgroundColor: secondaryColor, borderRadius: 30, marginRight: 3 }]}>
@@ -152,7 +216,7 @@ class MenuScreen extends React.Component {
                                         </TouchableOpacity>
                                     </View>
                                     <View style={[styles.marginBetweenVertical]}></View>
-                                    <View style={[styles.shadow, styles.inputBarcode, { flexDirection: 'column', alignItems: 'center', justifyContent: 'center', marginRight: 3 }]}>
+                                    <View style={[styles.shadow, styles.inputBarcode, { flexDirection: 'column', alignItems: 'center', justifyContent: 'center', paddingLeft: 0 }]}>
                                         <TextInput style={[styles.inputContainer]}
                                             placeholder=''
                                             keyboardType='email-address'
@@ -160,6 +224,8 @@ class MenuScreen extends React.Component {
                                             textAlign={'center'}
                                             onBlur={false}
                                             autoCapitalize={false}
+                                            blurOnSubmit={false}
+                                            selectTextOnFocus={true}
                                             value={props.qrcontno}
                                             onChangeText={async (text) => {
                                                 let item = props
@@ -173,7 +239,7 @@ class MenuScreen extends React.Component {
                             </View>
                             <View style={[styles.marginBetweenVertical]}></View>
                             <View style={[styles.center]}>
-                                <Text style={[styles.bold, { fontSize: 22, color: 'white', alignSelf: 'center', paddingLeft: 50 }]}>{`เลขอ้างอิง`}</Text>
+                                <Text style={[styles.bold, { fontSize: 22, color: 'white', alignSelf: 'center', paddingLeft: 55 }]}>{`เลขอ้างอิง`}</Text>
                                 <View style={[styles.container, { flexDirection: 'row', alignItems: 'center' }]}>
                                     <View style={[styles.marginBetweenVertical]}></View>
                                     <View style={[styles.center, styles.shadow, { width: 55, height: 55, backgroundColor: secondaryColor, borderRadius: 30, marginRight: 3 }]}>
@@ -188,7 +254,7 @@ class MenuScreen extends React.Component {
                                         </TouchableOpacity>
                                     </View>
                                     <View style={[styles.marginBetweenVertical]}></View>
-                                    <View style={[styles.shadow, styles.inputBarcode, { flexDirection: 'column', alignItems: 'center', justifyContent: 'center', paddingLeft: 30 }]}>
+                                    <View style={[styles.shadow, styles.inputBarcode, { flexDirection: 'column', alignItems: 'center', justifyContent: 'center', paddingLeft: 0 }]}>
                                         <TextInput style={[styles.inputContainer]}
                                             placeholder=''
                                             keyboardType='email-address'
@@ -196,6 +262,8 @@ class MenuScreen extends React.Component {
                                             textAlign={'center'}
                                             onBlur={false}
                                             autoCapitalize={false}
+                                            blurOnSubmit={false}
+                                            selectTextOnFocus={true}
                                             value={props.qrrefno}
                                             onChangeText={async (text) => {
                                                 let item = props
@@ -209,7 +277,7 @@ class MenuScreen extends React.Component {
                             </View>
                             <View style={[styles.marginBetweenVertical]}></View>
                             <View style={[styles.center]}>
-                                <Text style={[styles.bold, { fontSize: 22, color: 'white', alignSelf: 'center', paddingLeft: 50 }]}>{`ซีเรียลเครื่องกรองน้ำ`}</Text>
+                                <Text style={[styles.bold, { fontSize: 22, color: 'white', alignSelf: 'center', paddingLeft: 55 }]}>{`ซีเรียลเครื่องกรองน้ำ`}</Text>
                                 <View style={[styles.container, { flexDirection: 'row', alignItems: 'center' }]}>
                                     <View style={[styles.marginBetweenVertical]}></View>
                                     <View style={[styles.center, styles.shadow, { width: 55, height: 55, backgroundColor: secondaryColor, borderRadius: 30, marginRight: 3 }]}>
@@ -224,7 +292,7 @@ class MenuScreen extends React.Component {
                                         </TouchableOpacity>
                                     </View>
                                     <View style={[styles.marginBetweenVertical]}></View>
-                                    <View style={[styles.shadow, styles.inputBarcode, { flexDirection: 'column', alignItems: 'center', justifyContent: 'center', paddingLeft: 30 }]}>
+                                    <View style={[styles.shadow, styles.inputBarcode, { flexDirection: 'column', alignItems: 'center', justifyContent: 'center', paddingLeft: 0 }]}>
                                         <TextInput style={[styles.inputContainer]}
                                             placeholder=''
                                             keyboardType='email-address'
@@ -232,6 +300,8 @@ class MenuScreen extends React.Component {
                                             textAlign={'center'}
                                             onBlur={false}
                                             autoCapitalize={false}
+                                            blurOnSubmit={false}
+                                            selectTextOnFocus={true}
                                             value={props.qrmachine}
                                             onChangeText={async (text) => {
                                                 let item = props
@@ -245,7 +315,7 @@ class MenuScreen extends React.Component {
                             </View>
                             <View style={[styles.marginBetweenVertical]}></View>
                             <View style={[styles.center]}>
-                                <Text style={[styles.bold, { fontSize: 22, color: 'white', alignSelf: 'center', paddingLeft: 50 }]}>{`ซีเรียลสารกรอง`}</Text>
+                                <Text style={[styles.bold, { fontSize: 22, color: 'white', alignSelf: 'center', paddingLeft: 55 }]}>{`ซีเรียลสารกรอง`}</Text>
                                 <View style={[styles.container, { flexDirection: 'row', alignItems: 'center' }]}>
                                     <View style={[styles.marginBetweenVertical]}></View>
                                     <View style={[styles.center, styles.shadow, { width: 55, height: 55, backgroundColor: secondaryColor, borderRadius: 30, marginRight: 3 }]}>
@@ -260,7 +330,7 @@ class MenuScreen extends React.Component {
                                         </TouchableOpacity>
                                     </View>
                                     <View style={[styles.marginBetweenVertical]}></View>
-                                    <View style={[styles.shadow, styles.inputBarcode, { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', paddingLeft: 30 }]}>
+                                    <View style={[styles.shadow, styles.inputBarcode, { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', paddingLeft: 0 }]}>
                                         <TextInput style={[styles.inputContainer]}
                                             placeholder=''
                                             keyboardType='email-address'
@@ -268,6 +338,8 @@ class MenuScreen extends React.Component {
                                             textAlign={'center'}
                                             onBlur={false}
                                             autoCapitalize={false}
+                                            blurOnSubmit={false}
+                                            selectTextOnFocus={true}
                                             value={props.qrfilter}
                                             onChangeText={async (text) => {
                                                 let item = props
@@ -295,7 +367,7 @@ class MenuScreen extends React.Component {
                                                 'ข้อความ',
                                                 `คุณต้องการบันทึกข้อมูลใช่หรือไม่`,
                                                 [
-                                                    { text: "ใช่", onPress: () => alert(JSON.stringify(contnobc + ' And ' + refnobc + ' And ' + machinebc + ' And ' + filterbc)) },
+                                                    { text: "ใช่", onPress: () => this.OnSave() },
                                                     { text: "ยกเลิก", onPress: () => null, style: "cancel" }
                                                 ],
                                                 { cancelable: false }

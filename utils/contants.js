@@ -22,7 +22,8 @@ export const lightColor         = '#d2fafb'
  */
 export const SERVER             = 'Production' // UAT
 export const BASEURL            = 'https://toss.thiensurat.co.th'
-export const LOGIN_URL          = '/ServicesPHP/' + SERVER + '/HR/Authen'
+export const LOGIN_URL          = '/ServicesPHP/' + SERVER + '/PM/Authen'
+export const INSERT_PM          = '/ServicesPHP/' + SERVER + '/PM/InsertPMBarcode'
 /**
  * End
  */

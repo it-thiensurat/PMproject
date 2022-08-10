@@ -174,7 +174,7 @@ class LoginScreen extends React.Component {
             <View style={[styles.center, { flex: 1, backgroundColor: primaryColor }]}>
                 <Image source={image} style={{ resizeMode: 'contain', width: 200, height: '25%', margin: 10 }} />
                 <View style={[styles.shadow, { alignItems: 'center', justifyContent: 'center', marginBottom: 20 }]}>
-                    <Text style={{ fontSize: 20, fontWeight: 'bold', color: lightColor }}>{`PM Project`}</Text>
+                    <Text style={{ fontSize: 20, fontWeight: 'bold', color: lightColor }}>{`PM ScanBarcode`}</Text>
                 </View>
                 <View style={styles.marginBetweenVertical}></View>
                 <View style={[styles.shadow, styles.inputWithIcon]}>

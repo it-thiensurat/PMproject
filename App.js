@@ -43,7 +43,7 @@
  
  import Main from './screen/MainScreen'
  import Login from './screen/LoginScreen'
-//  import Splash from './screen/SplashScreen'
+ import Splash from './screen/Splashscreen'
  import Scanner from './screen/ScannerScreen'
  
  import styles from './style/style'
@@ -56,8 +56,8 @@
       screenOptions={{
         headerShown: false
       }}
-       initialRouteName='Login'>
-       {/* <Stack.Screen name="Splash" component={Splash} /> */}
+       initialRouteName='Splash'>
+       <Stack.Screen name="Splash" component={Splash} />
        <Stack.Screen name="Login" component={Login} />
        <Stack.Screen name="Main" component={Main} />
        <Stack.Screen name="Scanner" component={Scanner} />

@@ -24,11 +24,8 @@ import {
 
 import {
     TOKEN_KEY,
-    darkColor,
-    lightColor,
     primaryColor,
-    secondaryColor,
-    grayColor
+    secondaryColor
 } from '../../utils/contants'
 
 import styles from '../../style/style'
@@ -65,7 +62,7 @@ class ProfileScreen extends React.Component {
 
     handleBack = () => {
         return true
-        
+
     };
 
     componentWillUnmount() {
@@ -97,17 +94,22 @@ class ProfileScreen extends React.Component {
                         elevation: 0,
                         shadowOpacity: 0,
                     }} />
-                <ScrollView style={{ flex: 1, backgroundColor: 'white' }}>
+                <ScrollView style={{ flex: 1, backgroundColor: primaryColor }}>
+                    <View style={[styles.marginBetweenVertical]}></View>
+                    <View style={[styles.marginBetweenVertical]}></View>
                     <View style={{ padding: 10 }}>
-                        <View style={{ padding: 4, borderBottomWidth: 0.5, borderBottomColor: primaryColor, marginBottom: 15 }}>
-                            <Text style={[styles.bold, { color: primaryColor, fontSize: 24 }]}>{`ชื่อ - นามสกุล`}</Text>
-                            <Text style={[{ color: primaryColor, fontSize: 24, textAlignVertical: 'bottom' }]}>{`${props.userInfo.title}${props.userInfo.firstname} ${props.userInfo.lastname}`}</Text>
+                        <View style={{ padding: 4, borderBottomWidth: 0.5, borderBottomColor: 'white', marginBottom: 15 }}>
+                            <Text style={[styles.bold, { color: 'white', fontSize: 24 }]}>{`ชื่อ - นามสกุล`}</Text>
+                            <Text style={[{ color: 'white', fontSize: 24, textAlignVertical: 'bottom' }]}>{`${props.userInfo.title}${props.userInfo.firstname} ${props.userInfo.lastname}`}</Text>
                         </View>
-                        <View style={{ padding: 4, borderBottomWidth: 0.5, borderBottomColor: primaryColor, marginBottom: 15 }}>
-                            <Text style={[styles.bold, { color: primaryColor, fontSize: 24 }]}>{`ตำแหน่ง`}</Text>
-                            <Text style={[{ color: primaryColor, fontSize: 24, textAlignVertical: 'bottom' }]}>{`${props.userInfo.position}`}</Text>
+                        <View style={{ padding: 4, borderBottomWidth: 0.5, borderBottomColor: 'white', marginBottom: 15 }}>
+                            <Text style={[styles.bold, { color: 'white', fontSize: 24 }]}>{`ตำแหน่ง`}</Text>
+                            <Text style={[{ color: 'white', fontSize: 24, textAlignVertical: 'bottom' }]}>{`${props.userInfo.position}`}</Text>
                         </View>
                     </View>
+                    <View style={[styles.marginBetweenVertical]}></View>
+                    <View style={[styles.marginBetweenVertical]}></View>
+                    <View style={[styles.marginBetweenVertical]}></View>
                     <TouchableOpacity style={{ height: 50, width: DEVICE_WIDTH - 100, backgroundColor: secondaryColor, borderRadius: 26, alignSelf: 'center', justifyContent: 'center' }}
                         onPress={
                             async () => {

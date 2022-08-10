@@ -47,20 +47,23 @@ class Splashscreen extends React.Component {
     }
 
     componentDidMount() {
-        
+
         setTimeout(() => {
             this.props.navigation.replace('Login')
         }, 1500)
-        
+
         BackHandler.addEventListener('hardwareBackPress', this.handleBack);
     }
 
     render() {
         return (
             <View style={[styles.center, { flex: 1, backgroundColor: primaryColor }]}>
-                <Image source={image} style={{ resizeMode: 'contain', width: 250, height: '35%', margin: 10 }} />
-                <View style={[styles.positionBottom, { alignItems: 'center', justifyContent: 'center', bottom: 5 }]}>
-                    <Text style={{ fontSize: 16, color: 'white' }}>{`Copyright © 2022 by Thiensurat Public Company Limited.`}</Text>
+                <Image source={image} style={{ resizeMode: 'contain', width: 200, height: '25%', margin: 10 }} />
+                <View style={[styles.shadow, { alignItems: 'center', justifyContent: 'center', marginBottom: 20 }]}>
+                    <Text style={{ fontSize: 20, fontWeight: 'bold', color: lightColor }}>{`PM ScanBarcode`}</Text>
+                </View>
+                <View style={[styles.positionBottom, { alignItems: 'center', justifyContent: 'center' }]}>
+                    <Text style={{ fontSize: 16, color: lightColor }}>{`Copyright © 2022 by Thiensurat Public Company Limited.`}</Text>
                 </View>
             </View>
         )
