@@ -21,13 +21,15 @@ import {
     BASEURL,
     LOGIN_URL,
     TOKEN_KEY,
-    CHECK_KEY
+    CHECK_KEY,
+    CHECK_TIME
 } from '../utils/contants'
 
 import {
     tokenControll,
     userInfoControll,
-    indicatorControll
+    indicatorControll,
+    CheckTypeControll
 } from '../actions'
 
 import styles from '../style/style'
@@ -64,7 +66,7 @@ class LoginScreen extends React.Component {
                 props.tokenControll('save', results.token)
                 props.userInfoControll('save', results.data)
                 StorageService.set(TOKEN_KEY, results.token)
-                // props.CheckTypeControll(false)
+                props.CheckTypeControll(false)
                 props.indicatorControll(false)
                 props.navigation.replace('Main')
             } else {
@@ -164,8 +166,10 @@ class LoginScreen extends React.Component {
         BackHandler.removeEventListener('hardwareBackPress', this.handleBack);
     }
 
-    componentDidMount() {
-        // await this.getStorageToken()
+    async componentDidMount() {
+        await this.checkDate()
+        // await this.getStorageCheck()
+        await this.getStorageToken()
         BackHandler.addEventListener('hardwareBackPress', this.handleBack);
     }
 
@@ -174,7 +178,7 @@ class LoginScreen extends React.Component {
             <View style={[styles.center, { flex: 1, backgroundColor: primaryColor }]}>
                 <Image source={image} style={{ resizeMode: 'contain', width: 200, height: '25%', margin: 10 }} />
                 <View style={[styles.shadow, { alignItems: 'center', justifyContent: 'center', marginBottom: 20 }]}>
-                    <Text style={{ fontSize: 20, fontWeight: 'bold', color: lightColor }}>{`PM ScanBarcode`}</Text>
+                    <Text style={{ fontSize: 20, fontWeight: 'bold', color: lightColor }}>{`TSR PM`}</Text>
                 </View>
                 <View style={styles.marginBetweenVertical}></View>
                 <View style={[styles.shadow, styles.inputWithIcon]}>
@@ -227,7 +231,8 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = {
     tokenControll,
     userInfoControll,
-    indicatorControll
+    indicatorControll,
+    CheckTypeControll
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(LoginScreen)

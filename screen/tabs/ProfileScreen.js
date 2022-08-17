@@ -12,6 +12,7 @@ import {
 import { connect } from 'react-redux'
 import { NavigationBar } from 'navigationbar-react-native'
 import Icon from 'react-native-vector-icons/dist/FontAwesome5'
+import VersionCheck from 'react-native-version-check'
 
 import {
     userInfoControll,
@@ -25,11 +26,14 @@ import {
 import {
     TOKEN_KEY,
     primaryColor,
-    secondaryColor
+    secondaryColor,
+    PICURL
 } from '../../utils/contants'
 
 import styles from '../../style/style'
 import StorageService from '../../utils/StorageServies'
+
+import nophoto from '../../img/nophoto.png'
 
 const DEVICE_WIDTH = Dimensions.get('window').width;
 
@@ -96,6 +100,20 @@ class ProfileScreen extends React.Component {
                     }} />
                 <ScrollView style={{ flex: 1, backgroundColor: primaryColor }}>
                     <View style={[styles.marginBetweenVertical]}></View>
+                    <View style={[styles.imageContainer, { borderColor: primaryColor, alignItems: 'center', justifyContent: 'center' }]}>
+                        {
+                            props.userInfo.empForWeb != null ?
+                                <Image 
+                                style={{ resizeMode: 'contain', width: 120, height: 120, borderWidth: 1, borderRadius: 92, borderColor: 'white', backgroundColor: 'white', alignItems: 'center', justifyContent: 'center' }}
+                                source={{ uri: PICURL + props.userInfo.empForWeb + '.jpg' }}
+                                />
+                                :
+                                <Image 
+                                style={{ resizeMode: 'contain', width: 120, height: 120, borderWidth: 1, borderRadius: 92, borderColor: 'white', backgroundColor: 'white', alignItems: 'center', justifyContent: 'center' }}
+                                source={nophoto}
+                                />
+                        }
+                    </View>
                     <View style={[styles.marginBetweenVertical]}></View>
                     <View style={{ padding: 10 }}>
                         <View style={{ padding: 4, borderBottomWidth: 0.5, borderBottomColor: 'white', marginBottom: 15 }}>
@@ -125,6 +143,9 @@ class ProfileScreen extends React.Component {
                         <Text style={[{ color: 'white', fontSize: 24, alignSelf: 'center' }, styles.bold]}>{`ออกจากระบบ`}</Text>
                     </TouchableOpacity>
                 </ScrollView>
+                <View style={{ position: 'absolute', bottom: 0, padding: 4, alignSelf: 'flex-end' }}>
+                    <Text style={{ fontSize: 14, color: 'white' }}>{`version ${VersionCheck.getCurrentVersion()}`}</Text>
+                </View>
             </View>
         )
     }

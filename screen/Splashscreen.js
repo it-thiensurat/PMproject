@@ -60,7 +60,7 @@ class Splashscreen extends React.Component {
             <View style={[styles.center, { flex: 1, backgroundColor: primaryColor }]}>
                 <Image source={image} style={{ resizeMode: 'contain', width: 200, height: '25%', margin: 10 }} />
                 <View style={[styles.shadow, { alignItems: 'center', justifyContent: 'center', marginBottom: 20 }]}>
-                    <Text style={{ fontSize: 20, fontWeight: 'bold', color: lightColor }}>{`PM ScanBarcode`}</Text>
+                    <Text style={{ fontSize: 20, fontWeight: 'bold', color: lightColor }}>{`TSR PM`}</Text>
                 </View>
                 <View style={[styles.positionBottom, { alignItems: 'center', justifyContent: 'center' }]}>
                     <Text style={{ fontSize: 16, color: lightColor }}>{`Copyright © 2022 by Thiensurat Public Company Limited.`}</Text>

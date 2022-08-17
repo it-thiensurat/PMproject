@@ -24,9 +24,20 @@ export const SERVER             = 'Production' // UAT
 export const BASEURL            = 'https://toss.thiensurat.co.th'
 export const LOGIN_URL          = '/ServicesPHP/' + SERVER + '/PM/Authen'
 export const INSERT_PM          = '/ServicesPHP/' + SERVER + '/PM/InsertPMBarcode'
+
+export const PICURL             = 'http://app.tsrplc.com/EmployeeProfile/include/images/EmployeeImages/ResizeCard/'
 /**
  * End
  */
+
+/**
+ * API Google
+ */
+ export const GOOGLEAPI         = 'https://www.googleapis.com/geolocation/v1/geolocate?key='
+ export const GOOGLE_KEY        = 'AIzaSyDpjAkXaeA6yhQSem9UdKYvEnZaWWFvW6M'
+ /**
+  * End
+  */
 
 /**
  * Constants key

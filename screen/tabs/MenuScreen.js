@@ -9,11 +9,17 @@ import {
     TouchableOpacity,
     Linking,
     Dimensions,
-    ScrollView
+    ScrollView,
+    PermissionsAndroid,
+    AppState
 } from 'react-native'
 import { connect } from 'react-redux'
 import { NavigationBar } from 'navigationbar-react-native'
 import Icon from 'react-native-vector-icons/dist/FontAwesome5'
+// import axios from 'axios'
+import Geolocation from 'react-native-geolocation-service'
+import RNAndroidLocationEnabler from 'react-native-android-location-enabler'
+import RNExitApp from 'react-native-exit-app'
 
 import {
     userInfoControll,
@@ -30,6 +36,8 @@ import {
     API_KEY,
     BASEURL,
     INSERT_PM
+    // GOOGLEAPI,
+    // GOOGLE_KEY
 } from '../../utils/contants'
 
 import styles from '../../style/style'
@@ -40,7 +48,13 @@ const DEVICE_HEIGHT = Dimensions.get('window').height;
 
 class MenuScreen extends React.Component {
 
-    OnSave() {
+    state = {
+        loc_lat: '',
+        loc_lng: '',
+        appState: AppState.currentState
+    }
+
+    async OnSave() {
 
         let that = this
         const props = that.props
@@ -50,53 +64,157 @@ class MenuScreen extends React.Component {
             'x-api-key': API_KEY
         }
 
-        if (users.empId != '' && props.reducer.qrcontno != '' && props.reducer.qrrefno != '' && props.reducer.qrmachine != '' && props.reducer.qrfilter != '') {
-            let formData = new FormData();
+        if (that.state.loc_lat != '' && that.state.loc_lng != '') {
 
-            formData.append('CONTNO', props.reducer.qrcontno);
-            formData.append('Refno', props.reducer.qrrefno);
-            formData.append('ProductSerial', props.reducer.qrmachine);
-            formData.append('FilterSerial', props.reducer.qrfilter);
-            formData.append('Empid', users.empId);
+            // alert(JSON.stringify(that.state.loc_lat + ',' + that.state.loc_lng + ',' + 
+            //                      props.reducer.qrcontno + ',' + props.reducer.qrrefno + ',' + 
+            //                      props.reducer.qrmachine + ',' + props.reducer.qrfilter + ',' + users.empId))
+            // return
 
-            props.indicatorControll(true)
-            Helper.post(BASEURL + INSERT_PM, formData, header, async (results) => {
-                // alert(JSON.stringify(results))
-                // return
-                if (results.status == 'SUCCESS') {
-                    props.indicatorControll(false)
-                    Alert.alert(
-                        'ข้อความ',
-                        `${results.message}`,
-                        [
-                            {
-                                text: 'OK', onPress: () => that.ClearReducer()
-                            },
-                        ],
-                        { cancelable: false }
-                    )
-                } else {
-                    props.indicatorControll(false)
-                    Alert.alert(
-                        'คำเตือน',
-                        `${results.message}`,
-                        [
-                            { text: 'OK', onPress: () => null },
-                        ],
-                        { cancelable: false }
-                    )
-                }
-            })
+            if (users.empId != '' && props.reducer.qrcontno != '' && props.reducer.qrrefno != '' && props.reducer.qrmachine != '' && props.reducer.qrfilter != '') {
+                let formData = new FormData();
+
+                formData.append('CONTNO', props.reducer.qrcontno);
+                formData.append('Refno', props.reducer.qrrefno);
+                formData.append('ProductSerial', props.reducer.qrmachine);
+                formData.append('FilterSerial', props.reducer.qrfilter);
+                formData.append('Latitude', that.state.loc_lat);
+                formData.append('Longitude', that.state.loc_lng);
+                formData.append('Empid', users.empId);
+
+                props.indicatorControll(true)
+                Helper.post(BASEURL + INSERT_PM, formData, header, async (results) => {
+                    // alert(JSON.stringify(results))
+                    // return
+                    if (results.status == 'SUCCESS') {
+                        props.indicatorControll(false)
+                        Alert.alert(
+                            'ข้อความ',
+                            `${results.message}`,
+                            [
+                                {
+                                    text: 'OK', onPress: () => that.ClearReducer()
+                                },
+                            ],
+                            { cancelable: false }
+                        )
+                    } else {
+                        props.indicatorControll(false)
+                        Alert.alert(
+                            'คำเตือน',
+                            `${results.message}`,
+                            [
+                                { text: 'OK', onPress: () => null },
+                            ],
+                            { cancelable: false }
+                        )
+                    }
+                })
+            } else {
+                Alert.alert(
+                    'ข้อความ',
+                    `กรุณากรอกข้อมูลหรือสแกนบาร์โค๊ดให้ครบถ้วนก่อนทำการบันทึก`,
+                    [
+                        { text: "ตกลง", onPress: () => null }
+                    ],
+                    { cancelable: false }
+                )
+            }
         } else {
             Alert.alert(
                 'ข้อความ',
-                `กรุณากรอกข้อมูลหรือสแกนบาร์โค๊ดให้ครบถ้วนก่อนทำการบันทึก`,
+                `กรุณาให้แอพพลิเคชั่นเข้าถึงการระบุตำแหน่ง`,
                 [
-                    { text: "ตกลง", onPress: () => null }
+                    {
+                        text: "ตกลง", onPress: () => that.checkLocationEnable()
+                    },
+                    { text: "ยกเลิก", onPress: () => RNExitApp.exitApp(), style: "cancel" }
                 ],
                 { cancelable: false }
             )
         }
+    }
+
+    async getGoogleLocation() {
+        let that = this;
+        Geolocation.getCurrentPosition(
+            (position) => {
+                // console.log(position);
+                that.setState({ loc_lat: position.coords.latitude, loc_lng: position.coords.longitude });
+                that.OnSave();
+            },
+            (error) => {
+                // See error code charts below.
+                console.log(error.code, error.message);
+            },
+            { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+        );
+    }
+
+    checkLocationEnable() {
+        RNAndroidLocationEnabler.promptForEnableLocationIfNeeded({ interval: 10000, fastInterval: 5000 })
+            .then(data => {
+                this.requestLocationPermission()
+            }).catch(err => {
+                RNExitApp.exitApp()
+            });
+    }
+
+    async requestLocationPermission() {
+        try {
+            const granted = await PermissionsAndroid.request(
+                PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION, {
+                'title': 'Location Access Required',
+                'message': 'กรุณาให้แอพพลิเคชั่นเข้าถึงการระบุตำแหน่ง'
+            })
+
+            if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+                this.watchID = Geolocation.watchPosition(position => {
+                    this.setState({ loc_lat: position.coords.latitude, loc_lng: position.coords.longitude })
+                }, (error) => null,
+                    { enableHighAccuracy: true, timeout: 2000, maximumAge: 1000, distanceFilter: 10 },
+                );
+
+                Geolocation.getCurrentPosition(
+                    (position) => {
+                        // console.log(position);
+                        this.setState({ loc_lat: position.coords.latitude, loc_lng: position.coords.longitude })
+                    },
+                    (error) => {
+                        // See error code charts below.
+                        console.log(error.code, error.message);
+                    },
+                    { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+                );
+            } else {
+                Alert.alert(
+                    'คำเตือน',
+                    'กรุณาให้แอพพลิเคชั่นเข้าถึงการระบุตำแหน่ง',
+                    [
+                        { text: 'Cancel', onPress: () => RNExitApp.exitApp(), style: 'cancel' },
+                        { text: 'OK', onPress: () => PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION) },
+                    ],
+                    { cancelable: false }
+                )
+            }
+        } catch (err) {
+            Alert.alert(
+                'คำเตือน',
+                'กรุณาให้แอพพลิเคชั่นเข้าถึงการระบุตำแหน่ง',
+                [
+                    { text: 'Cancel', onPress: () => RNExitApp.exitApp(), style: 'cancel' },
+                    { text: 'OK', onPress: () => PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION) },
+                ],
+                { cancelable: false }
+            )
+        }
+    }
+
+    _handleAppStateChange = (nextAppState) => {
+        if (this.state.appState.match(/inactive|background/) && nextAppState === 'active') {
+            //this.checkVersion()
+        }
+        this.setState({ appState: nextAppState });
     }
 
     ClearReducer() {
@@ -162,10 +280,13 @@ class MenuScreen extends React.Component {
 
     componentWillUnmount() {
         BackHandler.removeEventListener('hardwareBackPress', this.handleBack);
+        AppState.removeEventListener('change', this._handleAppStateChange)
     }
 
     componentDidMount() {
+        this.checkLocationEnable()
         BackHandler.addEventListener('hardwareBackPress', this.handleBack);
+        AppState.addEventListener('change', this._handleAppStateChange)
     }
 
     render() {
@@ -201,7 +322,7 @@ class MenuScreen extends React.Component {
                         <View style={[styles.marginBetweenVertical]}></View>
                         <View style={[styles.container, styles.containerRow]}>
                             <View style={[styles.center]}>
-                                <Text style={[styles.bold, { fontSize: 22, color: 'white', alignSelf: 'center', paddingLeft: 55 }]}>{`เลขสัญญา`}</Text>
+                                <Text style={[styles.bold, { fontSize: 24, color: 'white', alignSelf: 'center', paddingLeft: 55 }]}>{`เลขใบงาน`}</Text>
                                 <View style={[styles.container, { flexDirection: 'row', alignItems: 'center' }]}>
                                     <View style={[styles.marginBetweenVertical]}></View>
                                     <View style={[styles.center, styles.shadow, { width: 55, height: 55, backgroundColor: secondaryColor, borderRadius: 30, marginRight: 3 }]}>
@@ -226,6 +347,7 @@ class MenuScreen extends React.Component {
                                             autoCapitalize={false}
                                             blurOnSubmit={false}
                                             selectTextOnFocus={true}
+                                            maxLength={20}
                                             value={props.qrcontno}
                                             onChangeText={async (text) => {
                                                 let item = props
@@ -239,7 +361,7 @@ class MenuScreen extends React.Component {
                             </View>
                             <View style={[styles.marginBetweenVertical]}></View>
                             <View style={[styles.center]}>
-                                <Text style={[styles.bold, { fontSize: 22, color: 'white', alignSelf: 'center', paddingLeft: 55 }]}>{`เลขอ้างอิง`}</Text>
+                                <Text style={[styles.bold, { fontSize: 24, color: 'white', alignSelf: 'center', paddingLeft: 55 }]}>{`เลขอ้างอิง`}</Text>
                                 <View style={[styles.container, { flexDirection: 'row', alignItems: 'center' }]}>
                                     <View style={[styles.marginBetweenVertical]}></View>
                                     <View style={[styles.center, styles.shadow, { width: 55, height: 55, backgroundColor: secondaryColor, borderRadius: 30, marginRight: 3 }]}>
@@ -264,6 +386,7 @@ class MenuScreen extends React.Component {
                                             autoCapitalize={false}
                                             blurOnSubmit={false}
                                             selectTextOnFocus={true}
+                                            maxLength={50}
                                             value={props.qrrefno}
                                             onChangeText={async (text) => {
                                                 let item = props
@@ -277,7 +400,7 @@ class MenuScreen extends React.Component {
                             </View>
                             <View style={[styles.marginBetweenVertical]}></View>
                             <View style={[styles.center]}>
-                                <Text style={[styles.bold, { fontSize: 22, color: 'white', alignSelf: 'center', paddingLeft: 55 }]}>{`ซีเรียลเครื่องกรองน้ำ`}</Text>
+                                <Text style={[styles.bold, { fontSize: 24, color: 'white', alignSelf: 'center', paddingLeft: 55 }]}>{`ซีเรียลเครื่องกรองน้ำ`}</Text>
                                 <View style={[styles.container, { flexDirection: 'row', alignItems: 'center' }]}>
                                     <View style={[styles.marginBetweenVertical]}></View>
                                     <View style={[styles.center, styles.shadow, { width: 55, height: 55, backgroundColor: secondaryColor, borderRadius: 30, marginRight: 3 }]}>
@@ -302,6 +425,7 @@ class MenuScreen extends React.Component {
                                             autoCapitalize={false}
                                             blurOnSubmit={false}
                                             selectTextOnFocus={true}
+                                            maxLength={50}
                                             value={props.qrmachine}
                                             onChangeText={async (text) => {
                                                 let item = props
@@ -315,7 +439,7 @@ class MenuScreen extends React.Component {
                             </View>
                             <View style={[styles.marginBetweenVertical]}></View>
                             <View style={[styles.center]}>
-                                <Text style={[styles.bold, { fontSize: 22, color: 'white', alignSelf: 'center', paddingLeft: 55 }]}>{`ซีเรียลสารกรอง`}</Text>
+                                <Text style={[styles.bold, { fontSize: 24, color: 'white', alignSelf: 'center', paddingLeft: 55 }]}>{`ซีเรียลสารกรอง`}</Text>
                                 <View style={[styles.container, { flexDirection: 'row', alignItems: 'center' }]}>
                                     <View style={[styles.marginBetweenVertical]}></View>
                                     <View style={[styles.center, styles.shadow, { width: 55, height: 55, backgroundColor: secondaryColor, borderRadius: 30, marginRight: 3 }]}>
@@ -340,6 +464,7 @@ class MenuScreen extends React.Component {
                                             autoCapitalize={false}
                                             blurOnSubmit={false}
                                             selectTextOnFocus={true}
+                                            maxLength={50}
                                             value={props.qrfilter}
                                             onChangeText={async (text) => {
                                                 let item = props
@@ -358,7 +483,6 @@ class MenuScreen extends React.Component {
                             <View style={[styles.marginBetweenVertical]}></View>
                             <View style={[styles.marginBetweenVertical]}></View>
                             <View style={[styles.marginBetweenVertical]}></View>
-                            <View style={[styles.marginBetweenVertical]}></View>
                             <View style={{ alignSelf: 'center' }}>
                                 <TouchableOpacity style={[styles.useButton, styles.center]}
                                     onPress={
@@ -367,14 +491,16 @@ class MenuScreen extends React.Component {
                                                 'ข้อความ',
                                                 `คุณต้องการบันทึกข้อมูลใช่หรือไม่`,
                                                 [
-                                                    { text: "ใช่", onPress: () => this.OnSave() },
+                                                    {
+                                                        text: "ใช่", onPress: () => this.getGoogleLocation()
+                                                    },
                                                     { text: "ยกเลิก", onPress: () => null, style: "cancel" }
                                                 ],
                                                 { cancelable: false }
                                             )
                                         }
                                     }>
-                                    <Text style={[styles.bold, { fontSize: 24, color: 'white', alignSelf: 'center' }]}>{`บันทึกข้อมูล`}</Text>
+                                    <Text style={[styles.bold, { fontSize: 26, color: 'white', alignSelf: 'center' }]}>{`บันทึกข้อมูล`}</Text>
                                 </TouchableOpacity>
                             </View>
                         </View>
